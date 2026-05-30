@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>DOWNZY</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Orbitron',sans-serif;
+}
+
+body{
+background:#030312;
+color:white;
+overflow-x:hidden;
+min-height:100vh;
+}
+
+body::before{
+content:'';
+position:fixed;
+inset:0;
+background:
+radial-gradient(circle at top,#ff00ff22,transparent 40%),
+radial-gradient(circle at bottom,#00cfff22,transparent 40%);
+z-index:-1;
+}
+
+.container{
+width:90%;
+max-width:1000px;
+margin:auto;
+padding:30px 0;
+}
+
+.logo{
+font-size:55px;
+font-weight:700;
+text-align:center;
+margin-top:30px;
+background:linear-gradient(90deg,#ff00ff,#00cfff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+.subtitle{
+text-align:center;
+margin-top:10px;
+opacity:.8;
+}
+
+.search-box{
+margin-top:40px;
+padding:15px;
+background:#0b0b1f;
+border:1px solid #222;
+border-radius:30px;
+display:flex;
+gap:10px;
+}
+
+.search-box input{
+flex:1;
+background:#000;
+border:1px solid #222;
+padding:15px;
+color:white;
+border-radius:15px;
+outline:none;
+}
+
+.search-box button{
+padding:15px 30px;
+border:none;
+border-radius:15px;
+cursor:pointer;
+font-weight:bold;
+background:linear-gradient(90deg,#ff00ff,#00cfff);
+color:white;
+}
+
+.features{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:30px;
+}
+
+.feature{
+padding:15px;
+text-align:center;
+background:#0b0b1f;
+border:1px solid #222;
+border-radius:15px;
+}
+
+.platform-title{
+margin-top:50px;
+text-align:center;
+letter-spacing:4px;
+}
+
+.platforms{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:15px;
+margin-top:25px;
+}
+
+.platform{
+background:#0b0b1f;
+padding:20px;
+border-radius:15px;
+text-align:center;
+border:1px solid #222;
+}
+
+.loader{
+display:none;
+text-align:center;
+margin-top:25px;
+}
+
+.result{
+display:none;
+margin-top:30px;
+}
+
+.card{
+background:#0b0b1f;
+border:1px solid #222;
+border-radius:20px;
+padding:20px;
+}
+
+.thumb{
+width:100%;
+border-radius:15px;
+margin-bottom:15px;
+}
+
+.video-title{
+line-height:1.6;
+margin-bottom:20px;
+}
+
+.btn{
+display:block;
+width:100%;
+padding:15px;
+text-align:center;
+text-decoration:none;
+border-radius:15px;
+margin-top:10px;
+font-weight:bold;
+color:white;
+}
+
+.high{
+background:linear-gradient(90deg,#ff00ff,#00cfff);
+}
+
+.low{
+background:linear-gradient(90deg,#00c853,#00e676);
+}
+
+.error{
+background:#ff000022;
+padding:15px;
+border-radius:10px;
+}
+
+.footer{
+margin-top:50px;
+padding:25px;
+text-align:center;
+border-top:1px solid #222;
+color:#aaa;
+}
+
+.footer strong{
+background:linear-gradient(90deg,#ff00ff,#00cfff);
+-webkit-background-clip:text;
+-webkit-text-fill-color:transparent;
+}
+
+@media(max-width:700px){
+
+.platforms{
+grid-template-columns:1fr 1fr;
+}
+
+.features{
+grid-template-columns:1fr;
+}
+
+.search-box{
+flex-direction:column;
+}
+
+.logo{
+font-size:38px;
+}
+
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<div class="logo">DOWNZY</div>
+
+<div class="subtitle">
+DOWNLOAD VIDEOS IN BEST AVAILABLE QUALITY
+</div>
+
+<div class="search-box">
+
+<input
+type="text"
+id="videoUrl"
+placeholder="Paste Video URL Here..."
+>
+
+<button onclick="fetchVideo()">
+FETCH
+</button>
+
+</div>
+
+<div class="features">
+
+<div class="feature">⚡ FAST</div>
+<div class="feature">🛡 FREE & SAFE</div>
+<div class="feature">∞ UNLIMITED</div>
+
+</div>
+
+<h2 class="platform-title">
+SUPPORTED PLATFORMS
+</h2>
+
+<div class="platforms">
+
+<div class="platform">📘 FACEBOOK</div>
+<div class="platform">▶️ YOUTUBE</div>
+<div class="platform">🎵 TIKTOK</div>
+
+<div class="platform">📸 INSTAGRAM</div>
+<div class="platform">🐦 TWITTER/X</div>
+<div class="platform">🎬 VIMEO</div>
+
+<div class="platform">❤️ LIKEE</div>
+<div class="platform">📌 PINTEREST</div>
+<div class="platform">🎞 DAILYMOTION</div>
+
+</div>
+
+<div class="loader" id="loader">
+Loading...
+</div>
+
+<div class="result" id="result"></div>
+
+<div class="footer">
+Powered by | <strong>Mr. Sarkar</strong> | © 2026
+</div>
+
+</div>
+
+<script>
+
+async function fetchVideo(){
+
+const url=document.getElementById('videoUrl').value.trim();
+
+if(!url){
+alert("Enter URL");
+return;
+}
+
+loader.style.display='block';
+result.style.display='none';
+
+try{
+
+const response=await fetch(
+'/api/download?url='+
+encodeURIComponent(url)
+);
+
+const json=await response.json();
+
+if(
+!json.data ||
+!json.data.data
+){
+throw new Error("Invalid Response");
+}
+
+const info=json.data.data;
+
+result.innerHTML=`
+
+<div class="card">
+
+<img
+class="thumb"
+src="${info.thumbnail}"
+loading="eager"
+>
+
+<div class="video-title">
+${info.title}
+</div>
+
+<a
+href="${info.high}"
+target="_blank"
+class="btn high">
+⬇ DOWNLOAD HIGH QUALITY
+</a>
+
+<a
+href="${info.low}"
+target="_blank"
+class="btn low">
+⬇ DOWNLOAD LOW QUALITY
+</a>
+
+</div>
+
+`;
+
+result.style.display='block';
+
+}catch(error){
+
+result.innerHTML=`
+<div class="error">
+Failed to fetch video information.
+</div>
+`;
+
+result.style.display='block';
+
+}
+
+loader.style.display='none';
+
+}
+
+document
+.getElementById("videoUrl")
+.addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+fetchVideo();
+}
+
+});
+
+</script>
+
+</body>
+</html>
